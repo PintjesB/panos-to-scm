@@ -50,7 +50,7 @@ def parse_arguments():
     
     # Paramètres de performance (Ajustés pour l'API SCM)
     parser.add_argument('--workers', type=int, default=3, help="Nombre de workers parallèles (Défaut: 3, Max recommandé: 5 pour SCM)")
-    parser.add_argument('--limit', type=int, default=100000, help="Nombre maximal total d'objets SCM à récupérer par type")
+    parser.add_argument('--limit', type=int, default=1000, help="Limite d'objets par requête API")
     
     return parser.parse_args()
 
