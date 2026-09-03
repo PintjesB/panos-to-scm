@@ -12,7 +12,7 @@ class AppConfig:
         
         # CORRECTION : limit doit être un entier (int), pas une string, 
         # sinon les opérations de pagination/slicing planteront.
-        self.limit = 500 
+        self.limit = 100000 
         
         self.obj_types = [
             obj.Tag, obj.Application, obj.Address, obj.AddressGroup, obj.Service, 
