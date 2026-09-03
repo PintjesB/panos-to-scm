@@ -139,14 +139,14 @@ class SCMObjectManager:
 
     def fetch_objects(self, obj_type, limit='10000', position=''):
         endpoint = obj_type._endpoint
-        max_limit = 5000  # Maximum limit allowed by the API - atleast for GET on address objects
+        page_size = 500  # Keep individual SCM list responses small enough to avoid TooBigBody errors
         total_limit = int(limit)  # Convert the limit to an integer
         offset = 0  # Start offset for pagination
         all_objects = []  # Initialize list to store all fetched objects
 
         while offset < total_limit:
-            # Calculate the limit for the current batch, ensuring it does not exceed max_limit
-            current_limit = min(max_limit, total_limit - offset)
+            # Calculate the limit for the current page without exceeding the requested total
+            current_limit = min(page_size, total_limit - offset)
             params = {
                 self.scope_type: self.scope_value,
                 'limit': current_limit,
@@ -289,13 +289,7 @@ class SCMObjectManager:
 
                 endpoint = f"{entry_class.get_endpoint().replace('?', '')}/{object_id}"
                 
-                # Parse the scope_param
-                scope_type, scope_value = scope_param.lstrip('&').split('=')
-                
-                # Construct the params dictionary for the API call
-                params = {scope_type: scope_value, 'limit': limit}
-                
-                current_objects = self.api_handler.get(entry_class.get_endpoint(), params=params)
+                current_objects = self.fetch_objects(entry_class, limit)
                 current_object = next((obj for obj in current_objects if obj['name'] == entry['name']), None)
                 
                 if not current_object:
