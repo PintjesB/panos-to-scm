@@ -61,6 +61,18 @@ class PaginationTests(unittest.TestCase):
             [params for _, params in api_handler.get_calls],
         )
 
+    def test_large_total_limit_does_not_reduce_page_size_or_truncate_results(self):
+        objects = [{"name": f"object-{index}", "id": str(index)} for index in range(1200)]
+        api_handler = FakeApiHandler(objects)
+        manager = self.make_manager(api_handler)
+
+        result = manager.fetch_objects(FakeObject, limit=100000, position="pre")
+
+        self.assertEqual(1200, len(result))
+        self.assertEqual([0, 500, 1000], [params["offset"] for _, params in api_handler.get_calls])
+        self.assertTrue(all(params["limit"] <= 500 for _, params in api_handler.get_calls))
+        self.assertTrue(all(params["position"] == "pre" for _, params in api_handler.get_calls))
+
     def test_fetch_objects_stops_after_last_partial_page_without_truncating(self):
         objects = [{"name": f"object-{index}", "id": str(index)} for index in range(750)]
         api_handler = FakeApiHandler(objects)
