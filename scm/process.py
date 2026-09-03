@@ -289,12 +289,6 @@ class SCMObjectManager:
 
                 endpoint = f"{entry_class.get_endpoint().replace('?', '')}/{object_id}"
                 
-                # Parse the scope_param
-                scope_type, scope_value = scope_param.lstrip('&').split('=')
-                
-                # Construct the params dictionary for the API call
-                params = {scope_type: scope_value, 'limit': limit}
-                
                 current_objects = self.fetch_objects(entry_class, limit)
                 current_object = next((obj for obj in current_objects if obj['name'] == entry['name']), None)
                 
