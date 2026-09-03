@@ -139,14 +139,14 @@ class SCMObjectManager:
 
     def fetch_objects(self, obj_type, limit='10000', position=''):
         endpoint = obj_type._endpoint
-        max_limit = 500  # Keep individual SCM list responses small enough to avoid TooBigBody errors
+        page_size = 500  # Keep individual SCM list responses small enough to avoid TooBigBody errors
         total_limit = int(limit)  # Convert the limit to an integer
         offset = 0  # Start offset for pagination
         all_objects = []  # Initialize list to store all fetched objects
 
         while offset < total_limit:
-            # Calculate the limit for the current batch, ensuring it does not exceed max_limit
-            current_limit = min(max_limit, total_limit - offset)
+            # Calculate the limit for the current page without exceeding the requested total
+            current_limit = min(page_size, total_limit - offset)
             params = {
                 self.scope_type: self.scope_value,
                 'limit': current_limit,
