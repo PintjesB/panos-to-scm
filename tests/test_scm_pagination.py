@@ -74,7 +74,7 @@ class PaginationTests(unittest.TestCase):
 
     def test_update_lookup_uses_paginated_fetch_and_can_find_object_after_first_page(self):
         objects = [
-            {"name": f"object-{index}", "id": str(index), "description": "old"}
+            {"name": f"object-{index}", "id": str(index), "value": "old"}
             for index in range(600)
         ]
         api_handler = FakeApiHandler(objects)
@@ -83,7 +83,7 @@ class PaginationTests(unittest.TestCase):
         manager.update_existing_entries(
             {
                 "FakeObject": [
-                    {"name": "object-550", "id": "550", "description": "new"}
+                    {"name": "object-550", "id": "550", "value": "new"}
                 ]
             },
             scope_param="folder=Shared",
